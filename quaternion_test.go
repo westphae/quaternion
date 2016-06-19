@@ -20,9 +20,11 @@ var (
 	qv2 = Quaternion{0, 0, 1, 1}
 	qv3 = Quaternion{0, 1, 0, 1}
 	qv4 = Quaternion{0, 2, 1, 2}
+	qv5 = Quaternion{0, -2, -1, -2}
 	q1  = Quaternion{1, -1, -1, 1}
 	q2  = Quaternion{-1, 1, 1, -1}
 	q0  = Quaternion{0, 0, 0, 0}
+	q3  = Quaternion{-1, -1, -1, 1}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -39,6 +41,24 @@ func TestVectorSum(t *testing.T) {
 
 func TestMixedSum(t *testing.T) {
 	if Sum(q1, q2) != q0 {
+		t.Fail()
+	}
+}
+
+func TestScalarConj(t *testing.T) {
+	if Conj(qs1) != qs1 {
+		t.Fail()
+	}
+}
+
+func TestVectorConj(t *testing.T) {
+	if Conj(qv4) != qv5 {
+		t.Fail()
+	}
+}
+
+func TestMixedConj(t *testing.T) {
+	if Conj(q2) != q3 {
 		t.Fail()
 	}
 }
