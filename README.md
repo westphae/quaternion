@@ -35,3 +35,9 @@ Prod works the same way as Sum:
 ```Go
 q5 := Prod(q4, q3, q1, q2)
 ```
+
+Calculate the norm ("length") and the squared norm:
+```Go
+k := Norm(q5)
+k2 := Norm2(q5)
+```

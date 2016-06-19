@@ -83,3 +83,21 @@ func TestMixedProd(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestScalarNorm(t *testing.T) {
+	if Norm(qs4) != 110 {
+		t.Fail()
+	}
+}
+
+func TestVectorNorm(t *testing.T) {
+	if Norm(qv4) != 3 {
+		t.Fail()
+	}
+}
+
+func TestMixedNorm(t *testing.T) {
+	if Norm(q4) != 8 {
+		t.Fail()
+	}
+}

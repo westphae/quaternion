@@ -8,7 +8,9 @@ This project is licensed under the terms of the MIT license.
 
 package quaternion
 
-import ()
+import (
+	"math"
+)
 
 type Quaternion struct {
 	W, X, Y, Z float64
@@ -21,6 +23,14 @@ func Conj(qin Quaternion) Quaternion {
 	qout.Y = -qin.Y
 	qout.Z = -qin.Z
 	return qout
+}
+
+func Norm2(qin Quaternion) float64 {
+	return qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z
+}
+
+func Norm(qin Quaternion) float64 {
+	return math.Sqrt(qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z)
 }
 
 func Sum(qin ...Quaternion) Quaternion {
