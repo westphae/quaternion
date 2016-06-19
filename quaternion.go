@@ -33,3 +33,16 @@ func Sum(qin ...Quaternion) Quaternion {
 	}
 	return qout
 }
+
+func Prod(qin ...Quaternion) Quaternion {
+	qout := Quaternion{1, 0, 0, 0}
+	var w, x, y, z float64
+	for _, q := range qin {
+		w = qout.W*q.W - qout.X*q.X - qout.Y*q.Y - qout.Z*q.Z
+		x = qout.W*q.X + qout.X*q.W + qout.Y*q.Z - qout.Z*q.Y
+		y = qout.W*q.Y + qout.Y*q.W + qout.Z*q.X - qout.X*q.Z
+		z = qout.W*q.Z + qout.Z*q.W + qout.X*q.Y - qout.Y*q.X
+		qout = Quaternion{w, x, y, z}
+	}
+	return qout
+}

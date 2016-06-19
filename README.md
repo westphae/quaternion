@@ -22,3 +22,7 @@ Sum takes any number of quaternions as arguments:
 q4 := Sum(q3, q1, q2, q4)
 ```
 
+Prod works the same way as Sum (**i** * **i** = **j** * **j** = **k** * **k** = **i** * **j** * **k** = -1:
+```Go
+q5 := Prod(q4, q3, q1, q2)
+```
