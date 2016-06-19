@@ -1,6 +1,15 @@
 # quaternion
 Quaternion math in golang
 
+Note: There are other packages to support quaternions in Go.  See, for example,
+https://github.com/thisisneal/Quaternion.  I couldn't find any under an
+unrestrictive license, so this is an implementation under the MIT license.
+
+## Quaternions
+Quaternions are defined by **i** * **i** = **j** * **j** = **k** * **k** = **i** * **j** * **k** = -1.
+See https://en.wikipedia.org/wiki/Quaternion
+
+## Usage
 Instantiate a quaternion q = a_w + a_x * **i** + a_y * **j** + a_z * **k**:
 ```Go
 q1 := Quaternion{a_w, a_x, a_y, a_z}
@@ -22,7 +31,7 @@ Sum takes any number of quaternions as arguments:
 q4 := Sum(q3, q1, q2, q4)
 ```
 
-Prod works the same way as Sum (**i** * **i** = **j** * **j** = **k** * **k** = **i** * **j** * **k** = -1:
+Prod works the same way as Sum:
 ```Go
 q5 := Prod(q4, q3, q1, q2)
 ```
