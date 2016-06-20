@@ -16,6 +16,12 @@ q1 := Quaternion{a_w, a_x, a_y, a_z}
 q2 := Quaternion{W: 0.5, X: 0.5, Y: -0.707, Z: -0.707}
 ```
 
+A number (scalar) can be created with Quaternion or with the Scalar function:
+```Go
+qk1 := Quaternion{W: -0.5}
+qk2 := Scalar(0.5)
+```
+
 Calculate the conjugate q* = a_w - a_x * **i** - a_y * **j** - a_z * **k**:
 ```Go
 q5 := Conj(qr)

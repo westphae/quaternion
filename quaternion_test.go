@@ -14,9 +14,9 @@ import (
 
 var (
 	qs1 = Quaternion{1, 0, 0, 0}
-	qs2 = Quaternion{W: 10, X: 0, Y: 0, Z: 0}
-	qs3 = Quaternion{11, 0, 0, 0}
-	qs4 = Quaternion{110, 0, 0, 0}
+	qs2 = Quaternion{W: 10}
+	qs3 = Scalar(11)
+	qs4 = Scalar(110)
 	qv1 = Quaternion{0, 1, 0, 0}
 	qv2 = Quaternion{0, 0, 1, 1}
 	qv3 = Quaternion{0, 1, 0, 1}

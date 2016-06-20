@@ -33,6 +33,10 @@ func Norm(qin Quaternion) float64 {
 	return math.Sqrt(qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z)
 }
 
+func Scalar(w float64) Quaternion {
+	return Quaternion{W: w}
+}
+
 func Sum(qin ...Quaternion) Quaternion {
 	qout := Quaternion{}
 	for _, q := range qin {
