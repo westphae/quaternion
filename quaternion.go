@@ -60,3 +60,14 @@ func Prod(qin ...Quaternion) Quaternion {
 	}
 	return qout
 }
+
+func Unit(qin Quaternion) Quaternion {
+	k := Norm(qin)
+	return Quaternion{qin.W / k, qin.X / k, qin.Y / k, qin.Z / k}
+}
+
+func Inv(qin Quaternion) Quaternion {
+	k2 := Norm2(qin)
+	q := Conj(qin)
+	return Quaternion{q.W / k2, q.X / k2, q.Y / k2, q.Z / k2}
+}

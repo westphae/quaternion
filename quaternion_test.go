@@ -28,6 +28,8 @@ var (
 	q0  = Quaternion{0, 0, 0, 0}
 	q3  = Quaternion{-1, -1, -1, 1}
 	q4  = Quaternion{4, -4, -4, 4}
+	q5  = Quaternion{0.5, -0.5, -0.5, 0.5}
+	q6  = Quaternion{0.0625, 0.0625, 0.0625, -0.0625}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -98,6 +100,18 @@ func TestVectorNorm(t *testing.T) {
 
 func TestMixedNorm(t *testing.T) {
 	if Norm(q4) != 8 {
+		t.Fail()
+	}
+}
+
+func TestUnit(t *testing.T) {
+	if Unit(q4) != q5 {
+		t.Fail()
+	}
+}
+
+func TestInv(t *testing.T) {
+	if Inv(q4) != q6 {
 		t.Fail()
 	}
 }
