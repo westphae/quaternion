@@ -88,21 +88,21 @@ func Inv(qin Quaternion) Quaternion {
 func Euler(q Quaternion) (float64, float64, float64) {
 	r := Unit(q)
 	phi := math.Atan2(2*(r.W*r.X+r.Y*r.Z), 1-2*(r.X*r.X+r.Y*r.Y))
-	theta := math.Asin(2 * (r.X*r.Z - r.W*r.Y))
-	psi := math.Atan2(2*(r.X*r.Y+r.W*r.Z), -1+2*(r.Y*r.Y+r.Z*r.Z))
+	theta := math.Asin(2 * (r.W*r.Y - r.Z*r.X))
+	psi := math.Atan2(2*(r.X*r.Y+r.W*r.Z), 1-2*(r.Y*r.Y+r.Z*r.Z))
 	return phi, theta, psi
 }
 
 // FromEuler returns a Quaternion corresponding to Euler angles phi, theta, psi
 func FromEuler(phi, theta, psi float64) Quaternion {
 	q := Quaternion{}
-	q.W = math.Cos(phi/2)*math.Cos(theta/2)*math.Sin(psi/2) -
-		math.Sin(phi/2)*math.Sin(theta/2)*math.Cos(psi/2)
-	q.X = math.Sin(phi/2)*math.Cos(theta/2)*math.Sin(psi/2) +
-		math.Cos(phi/2)*math.Sin(theta/2)*math.Cos(psi/2)
-	q.Y = -math.Cos(phi/2)*math.Sin(theta/2)*math.Sin(psi/2) +
-		math.Sin(phi/2)*math.Cos(theta/2)*math.Cos(psi/2)
-	q.Z = math.Cos(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) +
+	q.W = math.Cos(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) +
 		math.Sin(phi/2)*math.Sin(theta/2)*math.Sin(psi/2)
+	q.X = math.Sin(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) -
+		math.Cos(phi/2)*math.Sin(theta/2)*math.Sin(psi/2)
+	q.Y = math.Cos(phi/2)*math.Sin(theta/2)*math.Cos(psi/2) +
+		math.Sin(phi/2)*math.Cos(theta/2)*math.Sin(psi/2)
+	q.Z = math.Cos(phi/2)*math.Cos(theta/2)*math.Sin(psi/2) -
+		math.Sin(phi/2)*math.Sin(theta/2)*math.Cos(psi/2)
 	return q
 }
