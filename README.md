@@ -47,3 +47,9 @@ Calculate the norm ("length") and the squared norm:
 k := Norm(q5)
 k2 := Norm2(q5)
 ```
+
+Convert to/from Euler angle representations:
+```Go
+q1 := FromEuler(math.Pi/4, math.Pi/3, 5*math.Pi/3)
+phi, theta, psi := Euler(q1)
+```

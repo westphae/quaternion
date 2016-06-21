@@ -9,6 +9,7 @@ This project is licensed under the terms of the MIT license.
 package quaternion
 
 import (
+	"math"
 	"testing"
 )
 
@@ -30,6 +31,8 @@ var (
 	q4  = Quaternion{4, -4, -4, 4}
 	q5  = Quaternion{0.5, -0.5, -0.5, 0.5}
 	q6  = Quaternion{0.0625, 0.0625, 0.0625, -0.0625}
+	q7  = Quaternion{0.8347175749221727, 0.3943046179925829, 0.2940044459739585, 0.24765262787484427}
+	q8  = Quaternion{0.205033813803568, -0.3627631346111533, 0.44891659738265544, -0.7904669075670613}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -114,4 +117,24 @@ func TestInv(t *testing.T) {
 	if Inv(q4) != q6 {
 		t.Fail()
 	}
+}
+
+func TestEuler(t *testing.T) {
+	phi, theta, psi := Euler(q7)
+	if math.Abs(phi-1.0) > 1e-6 ||
+		math.Abs(theta+0.3) > 1e-6 ||
+		math.Abs(psi-2.4) > 1e-6 {
+		t.Fail()
+	}
+}
+
+func TestFromEuler(t *testing.T) {
+	q := FromEuler(-1.2, 0.4, 5.5)
+	if math.Abs(q.W-q8.W) > 1e-6 ||
+		math.Abs(q.X-q8.X) > 1e-6 ||
+		math.Abs(q.Y-q8.Y) > 1e-6 ||
+		math.Abs(q.Z-q8.Z) > 1e-6 {
+		t.Fail()
+	}
+
 }
