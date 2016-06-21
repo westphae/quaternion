@@ -106,3 +106,21 @@ func FromEuler(phi, theta, psi float64) Quaternion {
 		math.Sin(phi/2)*math.Sin(theta/2)*math.Cos(psi/2)
 	return q
 }
+
+// RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
+func RotMat(qin Quaternion) [3][3]float64 {
+	q := Unit(qin)
+	m := [3][3]float64{}
+	m[0][0] = 1 - 2*(q.Y*q.Y+q.Z*q.Z)
+	m[0][1] = 2 * (q.X*q.Y - q.W*q.Z)
+	m[0][2] = 2 * (q.W*q.Y + q.X*q.Z)
+
+	m[1][1] = 1 - 2*(q.Z*q.Z+q.X*q.X)
+	m[1][2] = 2 * (q.Y*q.Z - q.W*q.X)
+	m[1][0] = 2 * (q.W*q.Z + q.Y*q.X)
+
+	m[2][2] = 1 - 2*(q.X*q.X+q.Y*q.Y)
+	m[2][0] = 2 * (q.Z*q.X - q.W*q.Y)
+	m[2][1] = 2 * (q.W*q.X + q.Z*q.Y)
+	return m
+}

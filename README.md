@@ -53,3 +53,8 @@ Convert to/from Euler angle representations:
 q1 := FromEuler(math.Pi/4, math.Pi/3, 5*math.Pi/3)
 phi, theta, psi := Euler(q1)
 ```
+
+Get the Rotation Matrix corresponding to a quaternion:
+```Go
+m := RotMat(q1)
+```

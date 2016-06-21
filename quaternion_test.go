@@ -33,6 +33,11 @@ var (
 	q6  = Quaternion{0.0625, 0.0625, 0.0625, -0.0625}
 	q7  = Quaternion{0.24765262787484427, 0.2940044459739585, 0.3943046179925829, 0.8347175749221727}
 	q8  = Quaternion{-0.7904669075670613, 0.44891659738265544, -0.3627631346111533, 0.205033813803568}
+	q9  = Quaternion{math.Cos(math.Pi / 2), math.Sin(math.Pi/2) / math.Sqrt(3),
+		math.Sin(math.Pi/2) / math.Sqrt(3), -math.Sin(math.Pi/2) / math.Sqrt(3)}
+	m = [3][3]float64{[3]float64{-0.333333333, 0.666666667, -0.666666667},
+		[3]float64{0.666666667, -0.333333333, -0.666666667},
+		[3]float64{-0.666666667, -0.666666667, -0.333333333}}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -137,4 +142,15 @@ func TestFromEuler(t *testing.T) {
 		t.Fail()
 	}
 
+}
+
+func TestRotMat(t *testing.T) {
+	mm := RotMat(q9)
+	for i, x := range mm {
+		for j, y := range x {
+			if math.Abs(m[i][j]-y) > 1e-6 {
+				t.Fail()
+			}
+		}
+	}
 }
