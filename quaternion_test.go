@@ -59,19 +59,19 @@ func TestMixedSum(t *testing.T) {
 }
 
 func TestScalarConj(t *testing.T) {
-	if Conj(qs1) != qs1 {
+	if qs1.Conj() != qs1 {
 		t.Fail()
 	}
 }
 
 func TestVectorConj(t *testing.T) {
-	if Conj(qv4) != qv5 {
+	if qv4.Conj() != qv5 {
 		t.Fail()
 	}
 }
 
 func TestMixedConj(t *testing.T) {
-	if Conj(q2) != q3 {
+	if q2.Conj() != q3 {
 		t.Fail()
 	}
 }
@@ -95,37 +95,37 @@ func TestMixedProd(t *testing.T) {
 }
 
 func TestScalarNorm(t *testing.T) {
-	if Norm(qs4) != 110 {
+	if qs4.Norm() != 110 {
 		t.Fail()
 	}
 }
 
 func TestVectorNorm(t *testing.T) {
-	if Norm(qv4) != 3 {
+	if qv4.Norm() != 3 {
 		t.Fail()
 	}
 }
 
 func TestMixedNorm(t *testing.T) {
-	if Norm(q4) != 8 {
+	if q4.Norm() != 8 {
 		t.Fail()
 	}
 }
 
 func TestUnit(t *testing.T) {
-	if Unit(q4) != q5 {
+	if q4.Unit() != q5 {
 		t.Fail()
 	}
 }
 
 func TestInv(t *testing.T) {
-	if Inv(q4) != q6 {
+	if q4.Inv() != q6 {
 		t.Fail()
 	}
 }
 
 func TestEuler(t *testing.T) {
-	phi, theta, psi := Euler(q7)
+	phi, theta, psi := q7.Euler()
 	if math.Abs(phi-1.0) > 1e-6 ||
 		math.Abs(theta+0.3) > 1e-6 ||
 		math.Abs(psi-2.4) > 1e-6 {
@@ -145,7 +145,7 @@ func TestFromEuler(t *testing.T) {
 }
 
 func TestRotMat(t *testing.T) {
-	mm := RotMat(q9)
+	mm := q9.RotMat()
 	for i, x := range mm {
 		for j, y := range x {
 			if math.Abs(m[i][j]-y) > 1e-6 {
