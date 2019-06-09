@@ -12,10 +12,12 @@ import (
 	"math"
 )
 
+// New returns a new quaternion
 func New(w, x, y, z float64) Quaternion {
 	return Quaternion{W: w, X: x, Y: y, Z: z}
 }
 
+// Pure returns a new pure quaternion (no scalar part)
 func Pure(x, y, z float64) Quaternion {
 	return Quaternion{X: x, Y: y, Z: z}
 }
@@ -30,12 +32,10 @@ type Quaternion struct {
 
 // Conj returns the conjugate of a Quaternion (W,X,Y,Z) -> (W,-X,-Y,-Z)
 func (qin Quaternion) Conj() Quaternion {
-	qout := Quaternion{}
-	qout.W = +qin.W
-	qout.X = -qin.X
-	qout.Y = -qin.Y
-	qout.Z = -qin.Z
-	return qout
+	qin.X = -qin.X
+	qin.Y = -qin.Y
+	qin.Z = -qin.Z
+	return qin
 }
 
 // Norm2 returns the L2-Norm of a Quaternion (W,X,Y,Z) -> W*W+X*X+Y*Y+Z*Z
@@ -43,9 +43,18 @@ func (qin Quaternion) Norm2() float64 {
 	return qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z
 }
 
+// Neg returns the negative
+func (qin Quaternion) Neg() Quaternion {
+	qin.W = -qin.W
+	qin.X = -qin.X
+	qin.Y = -qin.Y
+	qin.Z = -qin.Z
+	return qin
+}
+
 // Norm returns the L1-Norm of a Quaternion (W,X,Y,Z) -> Sqrt(W*W+X*X+Y*Y+Z*Z)
 func (qin Quaternion) Norm() float64 {
-	return math.Sqrt(qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z)
+	return math.Sqrt(qin.Norm2())
 }
 
 // Scalar returns a scalar-only Quaternion representation of a float (W,0,0,0)
