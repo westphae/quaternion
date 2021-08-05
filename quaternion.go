@@ -22,6 +22,13 @@ func Pure(x, y, z float64) Quaternion {
 	return Quaternion{X: x, Y: y, Z: z}
 }
 
+// Vec3 represents a vector in 3d space
+type Vec3 struct {
+	X float64
+	Y float64
+	Z float64
+}
+
 // Quaternion represents a quaternion W+X*i+Y*j+Z*k
 type Quaternion struct {
 	W float64 // Scalar component
@@ -99,6 +106,14 @@ func (qin Quaternion) Inv() Quaternion {
 	k2 := qin.Norm2()
 	q := qin.Conj()
 	return Quaternion{q.W / k2, q.X / k2, q.Y / k2, q.Z / k2}
+}
+
+// RotateVec3 returns the vector rotated by the quaternion.
+func (qin Quaternion) RotateVec3(vec Vec3) Vec3 {
+	conj := qin.Conj()
+	aug := Quaternion{0, vec.X, vec.Y, vec.Z}
+	rot := Prod(qin, aug, conj)
+	return Vec3{rot.X, rot.Y, rot.Z}
 }
 
 // Euler returns the Euler angles phi, theta, psi corresponding to a Quaternion
