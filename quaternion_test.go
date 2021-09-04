@@ -36,10 +36,10 @@ var (
 	q9  = Quaternion{math.Cos(math.Pi / 2), math.Sin(math.Pi/2) / math.Sqrt(3),
 		math.Sin(math.Pi/2) / math.Sqrt(3), -math.Sin(math.Pi/2) / math.Sqrt(3)}
 	q10 = Quaternion{0.707106781186548, 0.707106781186547, 0, 0}
-	m = [3][3]float64{[3]float64{-0.333333333, 0.666666667, -0.666666667},
+	m   = [3][3]float64{[3]float64{-0.333333333, 0.666666667, -0.666666667},
 		[3]float64{0.666666667, -0.333333333, -0.666666667},
 		[3]float64{-0.666666667, -0.666666667, -0.333333333}}
-	v1 = Vec3{0,0,1}
+	v1 = Vec3{0, 0, 1}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -131,6 +131,15 @@ func TestRotateVec3(t *testing.T) {
 	if math.Abs(rot.X) > 1e-6 ||
 		math.Abs(rot.Y+1) > 1e-6 ||
 		math.Abs(rot.Z) > 1e-6 {
+		t.Fail()
+	}
+}
+
+func TestVec3Rotate(t *testing.T) {
+	vec := v1.Rotate(q10)
+	if math.Abs(vec.X) > 1e-6 ||
+		math.Abs(vec.Y+1) > 1e-6 ||
+		math.Abs(vec.Z) > 1e-6 {
 		t.Fail()
 	}
 }

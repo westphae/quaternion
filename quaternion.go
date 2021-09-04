@@ -116,6 +116,14 @@ func (qin Quaternion) RotateVec3(vec Vec3) Vec3 {
 	return Vec3{rot.X, rot.Y, rot.Z}
 }
 
+// Rotate returns the vector rotated by the quaternion.
+func (vin Vec3) Rotate(q Quaternion) Vec3 {
+	conj := q.Conj()
+	aug := Quaternion{0, vin.X, vin.Y, vin.Z}
+	rot := Prod(q, aug, conj)
+	return Vec3{rot.X, rot.Y, rot.Z}
+}
+
 // Euler returns the Euler angles phi, theta, psi corresponding to a Quaternion
 func (q Quaternion) Euler() (float64, float64, float64) {
 	r := q.Unit()
