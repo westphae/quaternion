@@ -164,3 +164,71 @@ func (qin Quaternion) RotMat() [3][3]float64 {
 	m[2][1] = 2 * (q.W*q.X + q.Z*q.Y)
 	return m
 }
+
+func (a Vec3) Normalize() Vec3 {
+	r := 1 / math.Sqrt(float64(a.X*a.X+a.Y*a.Y+a.Z*a.Z))
+	return Vec3{a.X * r, a.Y * r, a.Z * r}
+}
+
+func (a Vec3) Dot(b Vec3) float64 {
+	return a.X*b.X + a.Y*b.Y + a.Z*b.Z
+}
+
+func (a Vec3) Cross(b Vec3) Vec3 {
+	x := a.Y*b.Z - a.Z*b.Y
+	y := a.Z*b.X - a.X*b.Z
+	z := a.X*b.Y - a.Y*b.X
+	return Vec3{x, y, z}
+}
+
+func (a Vec3) Length() float64 {
+	return math.Sqrt(a.X*a.X + a.Y*a.Y + a.Z*a.Z)
+}
+
+// Returns a quaternion representing a rotation between the two arbitrary vectors.
+// Handles special cases too.
+// Refer to:
+// https://stackoverflow.com/questions/1171849/finding-quaternion-representing-the-rotation-from-one-vector-to-another#comment20591681_1171995
+// Also:
+// https://github.com/toji/gl-matrix/blob/f0583ef53e94bc7e78b78c8a24f09ed5e2f7a20c/src/gl-matrix/quat.js#L54
+func From2Vecs(v1, v2 Vec3) Quaternion {
+	// Required: both vectors are unit length:
+	v1 = v1.Normalize()
+	v2 = v2.Normalize()
+
+	q := Quaternion{}
+
+	xUnitVec := Vec3{X: 1, Y: 0, Z: 0}
+	yUnitVec := Vec3{X: 0, Y: 1, Z: 0}
+
+	dot := v1.Dot(v2)
+	if dot < -0.999999 { // Handle the case of parallel vectors pointing in opposite directions.
+		tmpvec := xUnitVec.Cross(v1)
+		if tmpvec.Length() < 0.000001 {
+			tmpvec = yUnitVec.Cross(v1)
+		}
+		tmpvec = tmpvec.Normalize()
+		q.X = float64(tmpvec.X)
+		q.Y = float64(tmpvec.Y)
+		q.Z = float64(tmpvec.Z)
+		q.W = math.Pi
+	} else if dot > 0.999999 { // Handle the case of parallel vectors both in the same direction.
+		q.X = 0
+		q.Y = 0
+		q.Z = 0
+		q.W = 1
+	} else {
+		tmpvec := v1.Cross(v2)
+		q.X = float64(tmpvec.X)
+		q.Y = float64(tmpvec.Y)
+		q.Z = float64(tmpvec.Z)
+		// Note: this statement is 1, if both vectors are unit length:
+		// 1 == math.Sqrt(float64(v1.LengthSquared())*float64(v2.LengthSquared()))
+		q.W = 1 + float64(dot)
+	}
+
+	// Don't forget to normalize q.
+	q = q.Unit()
+
+	return q
+}

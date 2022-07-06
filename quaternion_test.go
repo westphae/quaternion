@@ -40,6 +40,7 @@ var (
 		[3]float64{0.666666667, -0.333333333, -0.666666667},
 		[3]float64{-0.666666667, -0.666666667, -0.333333333}}
 	v1 = Vec3{0, 0, 1}
+	v2 = Vec3{0, -1, 0}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -172,5 +173,16 @@ func TestRotMat(t *testing.T) {
 				t.Fail()
 			}
 		}
+	}
+}
+
+func TestFrom2Vecs(t *testing.T) {
+	q := From2Vecs(v1, v2)
+	t.Logf("Quaternion W: %v, X: %v, Y: %v, Z: %v", q.W, q.X, q.Y, q.Z)
+	if math.Abs(q.W-q10.W) > 1e-6 ||
+		math.Abs(q.X-q10.X) > 1e-6 ||
+		math.Abs(q.Y-q10.Y) > 1e-6 ||
+		math.Abs(q.Z-q10.Z) > 1e-6 {
+		t.Fail()
 	}
 }
