@@ -95,15 +95,23 @@ func Prod(qin ...Quaternion) Quaternion {
 	return qout
 }
 
-// Unit returns the Quaternion rescaled to unit-L1-norm
+// Unit returns the Quaternion rescaled to unit norm. The zero quaternion
+// has no unit form and is returned unchanged.
 func (qin Quaternion) Unit() Quaternion {
 	k := qin.Norm()
+	if k == 0 {
+		return qin
+	}
 	return Quaternion{qin.W / k, qin.X / k, qin.Y / k, qin.Z / k}
 }
 
-// Inv returns the Quaternion conjugate rescaled so that Q Q* = 1
+// Inv returns the Quaternion conjugate rescaled so that Q Q* = 1. The zero
+// quaternion has no inverse and is returned unchanged.
 func (qin Quaternion) Inv() Quaternion {
 	k2 := qin.Norm2()
+	if k2 == 0 {
+		return qin
+	}
 	q := qin.Conj()
 	return Quaternion{q.W / k2, q.X / k2, q.Y / k2, q.Z / k2}
 }
