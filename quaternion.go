@@ -116,6 +116,50 @@ func (qin Quaternion) Inv() Quaternion {
 	return Quaternion{q.W / k2, q.X / k2, q.Y / k2, q.Z / k2}
 }
 
+// Add returns the vector sum v+w
+func (v Vec3) Add(w Vec3) Vec3 {
+	return Vec3{v.X + w.X, v.Y + w.Y, v.Z + w.Z}
+}
+
+// Sub returns the vector difference v-w
+func (v Vec3) Sub(w Vec3) Vec3 {
+	return Vec3{v.X - w.X, v.Y - w.Y, v.Z - w.Z}
+}
+
+// Scale returns the vector with every component multiplied by k
+func (v Vec3) Scale(k float64) Vec3 {
+	return Vec3{v.X * k, v.Y * k, v.Z * k}
+}
+
+// Dot returns the dot product v·w
+func (v Vec3) Dot(w Vec3) float64 {
+	return v.X*w.X + v.Y*w.Y + v.Z*w.Z
+}
+
+// Cross returns the cross product v×w
+func (v Vec3) Cross(w Vec3) Vec3 {
+	return Vec3{
+		v.Y*w.Z - v.Z*w.Y,
+		v.Z*w.X - v.X*w.Z,
+		v.X*w.Y - v.Y*w.X,
+	}
+}
+
+// Norm returns the Euclidean length of the vector
+func (v Vec3) Norm() float64 {
+	return math.Sqrt(v.Dot(v))
+}
+
+// Normalize returns the vector rescaled to unit length. The zero vector is
+// returned unchanged.
+func (v Vec3) Normalize() Vec3 {
+	k := v.Norm()
+	if k == 0 {
+		return v
+	}
+	return v.Scale(1 / k)
+}
+
 // RotateVec3 returns the vector rotated by the quaternion.
 func (qin Quaternion) RotateVec3(vec Vec3) Vec3 {
 	conj := qin.Conj()

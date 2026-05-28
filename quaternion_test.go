@@ -174,3 +174,29 @@ func TestRotMat(t *testing.T) {
 		}
 	}
 }
+
+func TestVec3Ops(t *testing.T) {
+	a := Vec3{1, 2, 3}
+	b := Vec3{4, 5, 6}
+	if a.Add(b) != (Vec3{5, 7, 9}) {
+		t.Fail()
+	}
+	if b.Sub(a) != (Vec3{3, 3, 3}) {
+		t.Fail()
+	}
+	if a.Scale(2) != (Vec3{2, 4, 6}) {
+		t.Fail()
+	}
+	if a.Dot(b) != 32 {
+		t.Fail()
+	}
+	if (Vec3{1, 0, 0}).Cross(Vec3{0, 1, 0}) != (Vec3{0, 0, 1}) {
+		t.Fail()
+	}
+	if (Vec3{3, 4, 0}).Norm() != 5 {
+		t.Fail()
+	}
+	if n := (Vec3{3, 4, 0}).Normalize(); math.Abs(n.X-0.6) > 1e-9 || math.Abs(n.Y-0.8) > 1e-9 || n.Z != 0 {
+		t.Fail()
+	}
+}
