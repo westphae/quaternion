@@ -45,7 +45,7 @@ func (qin Quaternion) Conj() Quaternion {
 	return qin
 }
 
-// Norm2 returns the L2-Norm of a Quaternion (W,X,Y,Z) -> W*W+X*X+Y*Y+Z*Z
+// Norm2 returns the squared Euclidean norm of a Quaternion (W,X,Y,Z) -> W*W+X*X+Y*Y+Z*Z
 func (qin Quaternion) Norm2() float64 {
 	return qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z
 }
@@ -59,7 +59,7 @@ func (qin Quaternion) Neg() Quaternion {
 	return qin
 }
 
-// Norm returns the L1-Norm of a Quaternion (W,X,Y,Z) -> Sqrt(W*W+X*X+Y*Y+Z*Z)
+// Norm returns the Euclidean (L2) norm of a Quaternion (W,X,Y,Z) -> Sqrt(W*W+X*X+Y*Y+Z*Z)
 func (qin Quaternion) Norm() float64 {
 	return math.Sqrt(qin.Norm2())
 }
