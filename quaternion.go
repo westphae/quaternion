@@ -242,6 +242,32 @@ func FromEuler(phi, theta, psi float64) Quaternion {
 	}
 }
 
+// FromAxisAngle returns a Quaternion representing a rotation of angle radians
+// about the given axis. The axis is normalized internally.
+func FromAxisAngle(axis Vec3, angle float64) Quaternion {
+	a := axis.Normalize()
+	s := math.Sin(angle / 2)
+	return Quaternion{
+		W: math.Cos(angle / 2),
+		X: a.X * s,
+		Y: a.Y * s,
+		Z: a.Z * s,
+	}
+}
+
+// AxisAngle returns the unit axis and angle (in radians) of the rotation
+// represented by the Quaternion. For a rotation of ~0 the axis is undefined
+// and (1,0,0) is returned.
+func (qin Quaternion) AxisAngle() (axis Vec3, angle float64) {
+	q := qin.Unit()
+	angle = 2 * math.Acos(q.W)
+	s := math.Sqrt(1 - q.W*q.W)
+	if s < 1e-9 {
+		return Vec3{1, 0, 0}, angle
+	}
+	return Vec3{q.X / s, q.Y / s, q.Z / s}, angle
+}
+
 // RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
 func (qin Quaternion) RotMat() [3][3]float64 {
 	q := qin.Unit()

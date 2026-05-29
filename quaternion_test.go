@@ -214,6 +214,27 @@ func TestApproxEqual(t *testing.T) {
 	}
 }
 
+func TestAxisAngleRoundTrip(t *testing.T) {
+	axis := Vec3{1, 2, 3}.Normalize()
+	angle := 1.0
+	q := FromAxisAngle(axis, angle)
+	a, ang := q.AxisAngle()
+	if math.Abs(ang-angle) > 1e-6 ||
+		math.Abs(a.X-axis.X) > 1e-6 ||
+		math.Abs(a.Y-axis.Y) > 1e-6 ||
+		math.Abs(a.Z-axis.Z) > 1e-6 {
+		t.Fail()
+	}
+}
+
+func TestFromAxisAngle(t *testing.T) {
+	// 90 degrees about the X axis == q10
+	q := FromAxisAngle(Vec3{1, 0, 0}, math.Pi/2)
+	if !q.ApproxEqual(q10, 1e-6) {
+		t.Fail()
+	}
+}
+
 func TestVec3Ops(t *testing.T) {
 	a := Vec3{1, 2, 3}
 	b := Vec3{4, 5, 6}
