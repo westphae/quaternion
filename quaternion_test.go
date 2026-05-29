@@ -155,13 +155,9 @@ func TestEuler(t *testing.T) {
 
 func TestFromEuler(t *testing.T) {
 	q := FromEuler(-1.2, 0.4, 5.5)
-	if math.Abs(q.W-q8.W) > 1e-6 ||
-		math.Abs(q.X-q8.X) > 1e-6 ||
-		math.Abs(q.Y-q8.Y) > 1e-6 ||
-		math.Abs(q.Z-q8.Z) > 1e-6 {
+	if !q.ApproxEqual(q8, 1e-6) {
 		t.Fail()
 	}
-
 }
 
 func TestRotMat(t *testing.T) {
@@ -172,6 +168,49 @@ func TestRotMat(t *testing.T) {
 				t.Fail()
 			}
 		}
+	}
+}
+
+func TestIdentity(t *testing.T) {
+	if Identity() != qs1 {
+		t.Fail()
+	}
+}
+
+func TestMul(t *testing.T) {
+	if q1.Mul(q2) != Prod(q1, q2) {
+		t.Fail()
+	}
+}
+
+func TestScale(t *testing.T) {
+	// q4 = {4,-4,-4,4}, scaled by 0.25 == q1 = {1,-1,-1,1}
+	if q4.Scale(0.25) != q1 {
+		t.Fail()
+	}
+}
+
+func TestSub(t *testing.T) {
+	// q1 - q2 = {2,-2,-2,2}
+	if q1.Sub(q2) != (Quaternion{2, -2, -2, 2}) {
+		t.Fail()
+	}
+}
+
+func TestDot(t *testing.T) {
+	if q1.Dot(q2) != -4 {
+		t.Fail()
+	}
+}
+
+func TestApproxEqual(t *testing.T) {
+	a := Quaternion{1, 2, 3, 4}
+	b := Quaternion{1, 2, 3, 4 + 1e-9}
+	if !a.ApproxEqual(b, 1e-6) {
+		t.Fail()
+	}
+	if a.ApproxEqual(Quaternion{1, 2, 3, 5}, 1e-6) {
+		t.Fail()
 	}
 }
 

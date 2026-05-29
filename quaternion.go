@@ -9,12 +9,19 @@ This project is licensed under the terms of the MIT license.
 package quaternion
 
 import (
+	"fmt"
 	"math"
 )
 
 // New returns a new quaternion
 func New(w, x, y, z float64) Quaternion {
 	return Quaternion{W: w, X: x, Y: y, Z: z}
+}
+
+// Identity returns the multiplicative identity quaternion (1,0,0,0),
+// which represents "no rotation".
+func Identity() Quaternion {
+	return Quaternion{W: 1}
 }
 
 // Pure returns a new pure quaternion (no scalar part)
@@ -81,6 +88,16 @@ func Sum(qin ...Quaternion) Quaternion {
 	return qout
 }
 
+// Mul returns the non-commutative Hamilton product q*r of two Quaternions
+func (q Quaternion) Mul(r Quaternion) Quaternion {
+	return Quaternion{
+		W: q.W*r.W - q.X*r.X - q.Y*r.Y - q.Z*r.Z,
+		X: q.W*r.X + q.X*r.W + q.Y*r.Z - q.Z*r.Y,
+		Y: q.W*r.Y + q.Y*r.W + q.Z*r.X - q.X*r.Z,
+		Z: q.W*r.Z + q.Z*r.W + q.X*r.Y - q.Y*r.X,
+	}
+}
+
 // Prod returns the non-commutative product of any number of Quaternions
 func Prod(qin ...Quaternion) Quaternion {
 	qout := Quaternion{1, 0, 0, 0}
@@ -93,6 +110,34 @@ func Prod(qin ...Quaternion) Quaternion {
 		qout = Quaternion{w, x, y, z}
 	}
 	return qout
+}
+
+// Scale returns the Quaternion with every component multiplied by k
+func (qin Quaternion) Scale(k float64) Quaternion {
+	return Quaternion{qin.W * k, qin.X * k, qin.Y * k, qin.Z * k}
+}
+
+// Sub returns the component-wise difference q-r of two Quaternions
+func (q Quaternion) Sub(r Quaternion) Quaternion {
+	return Quaternion{q.W - r.W, q.X - r.X, q.Y - r.Y, q.Z - r.Z}
+}
+
+// Dot returns the dot product of two Quaternions treated as 4-vectors
+func (q Quaternion) Dot(r Quaternion) float64 {
+	return q.W*r.W + q.X*r.X + q.Y*r.Y + q.Z*r.Z
+}
+
+// ApproxEqual reports whether every component of q and r differs by no more than tol
+func (q Quaternion) ApproxEqual(r Quaternion, tol float64) bool {
+	return math.Abs(q.W-r.W) <= tol &&
+		math.Abs(q.X-r.X) <= tol &&
+		math.Abs(q.Y-r.Y) <= tol &&
+		math.Abs(q.Z-r.Z) <= tol
+}
+
+// String implements fmt.Stringer, e.g. "0.5 + 0.5i - 0.707j - 0.707k"
+func (q Quaternion) String() string {
+	return fmt.Sprintf("%g %+gi %+gj %+gk", q.W, q.X, q.Y, q.Z)
 }
 
 // Unit returns the Quaternion rescaled to unit norm. The zero quaternion
