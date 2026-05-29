@@ -245,17 +245,12 @@ func FromEuler(phi, theta, psi float64) Quaternion {
 // RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
 func (qin Quaternion) RotMat() [3][3]float64 {
 	q := qin.Unit()
-	m := [3][3]float64{}
-	m[0][0] = 1 - 2*(q.Y*q.Y+q.Z*q.Z)
-	m[0][1] = 2 * (q.X*q.Y - q.W*q.Z)
-	m[0][2] = 2 * (q.W*q.Y + q.X*q.Z)
-
-	m[1][1] = 1 - 2*(q.Z*q.Z+q.X*q.X)
-	m[1][2] = 2 * (q.Y*q.Z - q.W*q.X)
-	m[1][0] = 2 * (q.W*q.Z + q.Y*q.X)
-
-	m[2][2] = 1 - 2*(q.X*q.X+q.Y*q.Y)
-	m[2][0] = 2 * (q.Z*q.X - q.W*q.Y)
-	m[2][1] = 2 * (q.W*q.X + q.Z*q.Y)
-	return m
+	xx, yy, zz := q.X*q.X, q.Y*q.Y, q.Z*q.Z
+	xy, xz, yz := q.X*q.Y, q.X*q.Z, q.Y*q.Z
+	wx, wy, wz := q.W*q.X, q.W*q.Y, q.W*q.Z
+	return [3][3]float64{
+		{1 - 2*(yy+zz), 2 * (xy - wz), 2 * (wy + xz)},
+		{2 * (wz + xy), 1 - 2*(zz+xx), 2 * (yz - wx)},
+		{2 * (xz - wy), 2 * (wx + yz), 1 - 2*(xx+yy)},
+	}
 }
