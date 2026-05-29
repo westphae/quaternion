@@ -268,6 +268,38 @@ func (qin Quaternion) AxisAngle() (axis Vec3, angle float64) {
 	return Vec3{q.X / s, q.Y / s, q.Z / s}, angle
 }
 
+// Nlerp returns the normalized linear interpolation between unit quaternions
+// q0 and q1 at parameter t in [0,1]. It is cheaper than Slerp but does not
+// rotate at a constant angular velocity.
+func Nlerp(q0, q1 Quaternion, t float64) Quaternion {
+	if q0.Dot(q1) < 0 {
+		q1 = q1.Neg()
+	}
+	return Sum(q0.Scale(1-t), q1.Scale(t)).Unit()
+}
+
+// Slerp returns the spherical linear interpolation between unit quaternions
+// q0 and q1 at parameter t in [0,1], rotating along the shortest arc at a
+// constant angular velocity. Near-parallel inputs fall back to Nlerp.
+func Slerp(q0, q1 Quaternion, t float64) Quaternion {
+	q0 = q0.Unit()
+	q1 = q1.Unit()
+	d := q0.Dot(q1)
+	if d < 0 {
+		q1 = q1.Neg()
+		d = -d
+	}
+	if d > 0.9995 {
+		return Nlerp(q0, q1, t)
+	}
+	theta := math.Acos(d)
+	s := math.Sin(theta)
+	return Sum(
+		q0.Scale(math.Sin((1-t)*theta)/s),
+		q1.Scale(math.Sin(t*theta)/s),
+	)
+}
+
 // RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
 func (qin Quaternion) RotMat() [3][3]float64 {
 	q := qin.Unit()

@@ -235,6 +235,49 @@ func TestFromAxisAngle(t *testing.T) {
 	}
 }
 
+func TestSlerpEndpoints(t *testing.T) {
+	qa := FromAxisAngle(Vec3{0, 0, 1}, 0)
+	qb := FromAxisAngle(Vec3{0, 0, 1}, math.Pi/2)
+	if !Slerp(qa, qb, 0).ApproxEqual(qa, 1e-6) {
+		t.Fail()
+	}
+	if !Slerp(qa, qb, 1).ApproxEqual(qb, 1e-6) {
+		t.Fail()
+	}
+}
+
+func TestSlerpMidpoint(t *testing.T) {
+	qa := FromAxisAngle(Vec3{0, 0, 1}, 0)
+	qb := FromAxisAngle(Vec3{0, 0, 1}, math.Pi/2)
+	mid := FromAxisAngle(Vec3{0, 0, 1}, math.Pi/4)
+	if !Slerp(qa, qb, 0.5).ApproxEqual(mid, 1e-6) {
+		t.Fail()
+	}
+}
+
+func TestSlerpNearParallel(t *testing.T) {
+	// Near-parallel inputs exercise the Nlerp fallback; result stays unit-norm.
+	qa := FromAxisAngle(Vec3{0, 0, 1}, 0)
+	qc := FromAxisAngle(Vec3{0, 0, 1}, 1e-5)
+	if math.Abs(Slerp(qa, qc, 0.5).Norm()-1) > 1e-6 {
+		t.Fail()
+	}
+}
+
+func TestNlerp(t *testing.T) {
+	qa := FromAxisAngle(Vec3{0, 0, 1}, 0)
+	qb := FromAxisAngle(Vec3{0, 0, 1}, math.Pi/2)
+	if !Nlerp(qa, qb, 0).ApproxEqual(qa, 1e-6) {
+		t.Fail()
+	}
+	if !Nlerp(qa, qb, 1).ApproxEqual(qb, 1e-6) {
+		t.Fail()
+	}
+	if math.Abs(Nlerp(qa, qb, 0.5).Norm()-1) > 1e-6 {
+		t.Fail()
+	}
+}
+
 func TestVec3Ops(t *testing.T) {
 	a := Vec3{1, 2, 3}
 	b := Vec3{4, 5, 6}
