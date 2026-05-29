@@ -230,16 +230,16 @@ func (q Quaternion) Euler() (float64, float64, float64) {
 
 // FromEuler returns a Quaternion corresponding to Euler angles phi, theta, psi
 func FromEuler(phi, theta, psi float64) Quaternion {
-	q := Quaternion{}
-	q.W = math.Cos(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) +
-		math.Sin(phi/2)*math.Sin(theta/2)*math.Sin(psi/2)
-	q.X = math.Sin(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) -
-		math.Cos(phi/2)*math.Sin(theta/2)*math.Sin(psi/2)
-	q.Y = math.Cos(phi/2)*math.Sin(theta/2)*math.Cos(psi/2) +
-		math.Sin(phi/2)*math.Cos(theta/2)*math.Sin(psi/2)
-	q.Z = math.Cos(phi/2)*math.Cos(theta/2)*math.Sin(psi/2) -
-		math.Sin(phi/2)*math.Sin(theta/2)*math.Cos(psi/2)
-	return q
+	// Each half-angle sin/cos is computed once; trig calls dominate the cost.
+	cp, sp := math.Cos(phi/2), math.Sin(phi/2)
+	ct, st := math.Cos(theta/2), math.Sin(theta/2)
+	cs, ss := math.Cos(psi/2), math.Sin(psi/2)
+	return Quaternion{
+		W: cp*ct*cs + sp*st*ss,
+		X: sp*ct*cs - cp*st*ss,
+		Y: cp*st*cs + sp*ct*ss,
+		Z: cp*ct*ss - sp*st*cs,
+	}
 }
 
 // RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
