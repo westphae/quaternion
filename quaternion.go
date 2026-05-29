@@ -203,20 +203,30 @@ func (v Vec3) Normalize() Vec3 {
 	return v.Scale(1 / k)
 }
 
-// RotateVec3 returns the vector rotated by the quaternion.
+// RotateVec3 returns the vector rotated by the quaternion. The quaternion is
+// normalized first, so the result is a pure rotation regardless of its norm.
 func (qin Quaternion) RotateVec3(vec Vec3) Vec3 {
-	conj := qin.Conj()
-	aug := Quaternion{0, vec.X, vec.Y, vec.Z}
-	rot := Prod(qin, aug, conj)
-	return Vec3{rot.X, rot.Y, rot.Z}
+	return qin.Unit().RotateVec3Unit(vec)
+}
+
+// RotateVec3Unit is like RotateVec3 but assumes the quaternion is already
+// unit-length and skips normalization. The result is meaningful only for a
+// unit quaternion; for any other the vector is scaled by the squared norm.
+func (qin Quaternion) RotateVec3Unit(vec Vec3) Vec3 {
+	qv := Vec3{qin.X, qin.Y, qin.Z}
+	t := qv.Cross(vec).Scale(2)
+	return vec.Add(t.Scale(qin.W)).Add(qv.Cross(t))
 }
 
 // Rotate returns the vector rotated by the quaternion.
 func (vin Vec3) Rotate(q Quaternion) Vec3 {
-	conj := q.Conj()
-	aug := Quaternion{0, vin.X, vin.Y, vin.Z}
-	rot := Prod(q, aug, conj)
-	return Vec3{rot.X, rot.Y, rot.Z}
+	return q.RotateVec3(vin)
+}
+
+// RotateUnit is like Rotate but assumes the quaternion is already unit-length
+// and skips normalization. See RotateVec3Unit.
+func (vin Vec3) RotateUnit(q Quaternion) Vec3 {
+	return q.RotateVec3Unit(vin)
 }
 
 // Euler returns the Euler angles phi, theta, psi corresponding to a Quaternion
@@ -303,6 +313,21 @@ func Slerp(q0, q1 Quaternion, t float64) Quaternion {
 // RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
 func (qin Quaternion) RotMat() [3][3]float64 {
 	q := qin.Unit()
+	xx, yy, zz := q.X*q.X, q.Y*q.Y, q.Z*q.Z
+	xy, xz, yz := q.X*q.Y, q.X*q.Z, q.Y*q.Z
+	wx, wy, wz := q.W*q.X, q.W*q.Y, q.W*q.Z
+	return [3][3]float64{
+		{1 - 2*(yy+zz), 2 * (xy - wz), 2 * (wy + xz)},
+		{2 * (wz + xy), 1 - 2*(zz+xx), 2 * (yz - wx)},
+		{2 * (xz - wy), 2 * (wx + yz), 1 - 2*(xx+yy)},
+	}
+}
+
+// RotMatUnit is like RotMat but assumes the quaternion is already unit-length
+// and skips normalization. The result is meaningful only for a unit quaternion.
+// (The body mirrors RotMat without the Unit() call; TestRotMatUnit guards that
+// the two stay in agreement.)
+func (q Quaternion) RotMatUnit() [3][3]float64 {
 	xx, yy, zz := q.X*q.X, q.Y*q.Y, q.Z*q.Z
 	xy, xz, yz := q.X*q.Y, q.X*q.Z, q.Y*q.Z
 	wx, wy, wz := q.W*q.X, q.W*q.Y, q.W*q.Z

@@ -278,6 +278,28 @@ func TestNlerp(t *testing.T) {
 	}
 }
 
+func TestRotateVec3Unit(t *testing.T) {
+	// For a unit quaternion the fast path matches the normalizing path exactly.
+	if q10.RotateVec3Unit(v1) != q10.RotateVec3(v1) {
+		t.Fail()
+	}
+	if v1.RotateUnit(q10) != v1.Rotate(q10) {
+		t.Fail()
+	}
+	// And it produces the expected rotation (90 deg about X sends +Z to -Y).
+	rot := q10.RotateVec3Unit(v1)
+	if math.Abs(rot.X) > 1e-6 || math.Abs(rot.Y+1) > 1e-6 || math.Abs(rot.Z) > 1e-6 {
+		t.Fail()
+	}
+}
+
+func TestRotMatUnit(t *testing.T) {
+	// q9 is unit-length, so the fast path matches RotMat exactly.
+	if q9.RotMatUnit() != q9.RotMat() {
+		t.Fail()
+	}
+}
+
 func TestVec3Ops(t *testing.T) {
 	a := Vec3{1, 2, 3}
 	b := Vec3{4, 5, 6}
