@@ -28,6 +28,11 @@ A pure quaternion with no scalar component:
 q := Pure(0.5, -0.707, -0.707)
 ```
 
+The identity ("no rotation") quaternion:
+```Go
+q := Identity()
+```
+
 Calculate the conjugate q* = a_w - a_x * **i** - a_y * **j** - a_z * **k**:
 ```Go
 q5 := qr.Conj()
@@ -48,6 +53,15 @@ Prod works the same way as Sum:
 q5 := Prod(q4, q3, q1, q2)
 ```
 
+For the common two-quaternion case, Mul is a faster binary product.
+Scale multiplies by a scalar and Sub takes a difference:
+```Go
+q6 := q1.Mul(q2)
+q7 := q1.Scale(0.5)
+q8 := q1.Sub(q2)
+d  := q1.Dot(q2)
+```
+
 Calculate the norm ("length") and the squared norm:
 ```Go
 k := q5.Norm()
@@ -60,7 +74,29 @@ q1 := FromEuler(math.Pi/4, math.Pi/3, 5*math.Pi/3)
 phi, theta, psi := q1.Euler()
 ```
 
-Get the Rotation Matrix corresponding to a quaternion:
+Convert to/from axis-angle representations:
 ```Go
+q := FromAxisAngle(Vec3{0, 0, 1}, math.Pi/2)
+axis, angle := q.AxisAngle()
+```
+
+Interpolate between two rotations. Slerp follows the shortest arc at constant
+angular velocity; Nlerp is a cheaper approximation:
+```Go
+q := Slerp(q1, q2, 0.5)
+q := Nlerp(q1, q2, 0.5)
+```
+
+Rotate a vector by a quaternion, and get the Rotation Matrix:
+```Go
+v := q1.RotateVec3(Vec3{0, 0, 1})
 m := q1.RotMat()
+```
+
+`RotateVec3` and `RotMat` normalize the quaternion first. If you already hold a
+unit quaternion, the `Unit` variants skip that step and run roughly twice as
+fast:
+```Go
+v := q1.RotateVec3Unit(Vec3{0, 0, 1})
+m := q1.RotMatUnit()
 ```
